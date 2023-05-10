@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
 
-from app.user_interface.fastapi import middleware
+from internal.user_interface.restapi import middleware
 
 app = FastAPI(
     middleware=[
