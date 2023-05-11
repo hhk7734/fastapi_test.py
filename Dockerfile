@@ -16,4 +16,4 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 ENV PORT 8000
 
-CMD ["uvicorn", "cmd.app.main:app", "--host", "0.0.0.0", "--port", "${PORT}", "--no-access-log", "--no-use-colors"]
+CMD ["uvicorn", "app.test.main:app", "--host", "0.0.0.0", "--port", "${PORT}", "--no-access-log", "--no-use-colors"]
