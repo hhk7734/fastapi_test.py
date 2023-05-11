@@ -86,16 +86,23 @@ def contextual_logger():
 
 
 def debug(msg: str, *args, **kwargs) -> None:
-    contextual_logger().debug(msg, *args, **kwargs)
+    if _logger.level(_level_filter.level).no >= logging.DEBUG:
+        contextual_logger().debug(msg, *args, **kwargs)
 
 
 def info(msg: str, *args, **kwargs) -> None:
-    contextual_logger().info(msg, *args, **kwargs)
+    if _logger.level(_level_filter.level).no >= logging.INFO:
+        contextual_logger().info(msg, *args, **kwargs)
 
 
 def warning(msg: str, *args, **kwargs) -> None:
-    contextual_logger().warning(msg, *args, **kwargs)
+    if _logger.level(_level_filter.level).no >= logging.WARNING:
+        contextual_logger().warning(msg, *args, **kwargs)
 
 
 def error(msg: str, *args, **kwargs) -> None:
     contextual_logger().error(msg, *args, **kwargs)
+
+
+def exception(msg: str, *args, **kwargs) -> None:
+    contextual_logger().exception(msg, *args, **kwargs)

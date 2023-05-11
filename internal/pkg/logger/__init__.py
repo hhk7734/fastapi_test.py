@@ -3,6 +3,7 @@ from .logger import (
     debug,
     delete_field,
     error,
+    exception,
     fileds,
     get_field,
     info,
@@ -24,4 +25,5 @@ __all__ = [
     "info",
     "warning",
     "error",
+    "exception",
 ]
