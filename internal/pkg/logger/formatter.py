@@ -65,7 +65,8 @@ class JsonFormatter(Formatter):
         depth = 7
         while frames[depth].filename.endswith("logging/__init__.py"):
             depth += 1
-        depth += 1
+        if frames[depth].filename.endswith("ctxlogger.py"):
+            depth += 1
 
         msg_dict["caller"] = (
             "/".join(frames[depth].filename.split("/")[-2:]) + f":{frames[depth].lineno}"
@@ -102,7 +103,8 @@ class TextFormatter(Formatter):
         depth = 7
         while frames[depth].filename.endswith("logging/__init__.py"):
             depth += 1
-        depth += 1
+        if frames[depth].filename.endswith("ctxlogger.py"):
+            depth += 1
 
         caller = "/".join(frames[depth].filename.split("/")[-2:]) + f":{frames[depth].lineno}"
 
