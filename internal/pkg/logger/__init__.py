@@ -1,29 +1,6 @@
-from .logger import (
-    contextual_logger,
-    debug,
-    delete_field,
-    error,
-    exception,
-    fileds,
-    get_field,
-    info,
-    new_context,
-    set_fields,
-    set_level,
-    warning,
-)
+from internal.pkg.logger.ctxlogger import CtxLogger as _CtxLogger
+from internal.pkg.logger.ctxlogger import CtxLoggerConfig
 
-__all__ = [
-    "set_level",
-    "new_context",
-    "set_fields",
-    "get_field",
-    "fileds",
-    "delete_field",
-    "contextual_logger",
-    "debug",
-    "info",
-    "warning",
-    "error",
-    "exception",
-]
+logger = _CtxLogger(CtxLoggerConfig())
+
+__all__ = ["logger", "CtxLoggerConfig"]

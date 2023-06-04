@@ -9,7 +9,6 @@ fastapi = "^0.79.0"
 python = "^3.11"
 python-dotenv = "^0.20.0"
 uvicorn = "^0.22.0"
-loguru = "^0.7.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.6.0"
@@ -383,6 +382,7 @@ disable = [
   "too-few-public-methods",
   "bare-except",
   "invalid-name",
+  "line-too-long",
 ]
 
 # Enable the message, report, category or checker with the given id(s). You can
