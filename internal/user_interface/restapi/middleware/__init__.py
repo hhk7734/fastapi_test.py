@@ -1,3 +1,3 @@
-from internal.user_interface.restapi.middleware.logger import Logger, Recovery
+from internal.user_interface.restapi.middleware.logger import Logger
 
-__all__ = ["Logger", "Recovery"]
+__all__ = ["Logger"]

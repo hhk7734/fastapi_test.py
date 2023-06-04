@@ -14,7 +14,6 @@ class RestAPI:
             lifespan=self._lifespan,
             middleware=[
                 Middleware(middleware.Logger),
-                Middleware(middleware.Recovery),
             ],
         )
 

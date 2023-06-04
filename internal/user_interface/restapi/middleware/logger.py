@@ -1,3 +1,4 @@
+import logging
 import time
 import traceback
 from http import HTTPStatus
@@ -6,7 +7,7 @@ from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
 
-from internal.pkg import logger
+from internal.pkg.logger import logger
 
 
 class Logger(BaseHTTPMiddleware):
@@ -25,48 +26,41 @@ class Logger(BaseHTTPMiddleware):
         return dump
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        with logger.new_context():
-            start_time = time.time()
-            path = request.url.path
+        start_time = time.time()
+        path = request.url.path
 
-            request.state.errors = []
-            res = await call_next(request)
-
-            latency = time.time() - start_time
-            logger.set_fields(user_id=getattr(request.state, "user_id", -1))
-            logger.set_fields(request_id=request.headers.get("x-request-id", ""))
-
-            errors = request.state.errors
-            _log = logger.contextual_logger().bind(
-                method=request.method,
-                url=path,
-                status=res.status_code,
-                remote_address=request.client.host if request.client is not None else "",
-                user_agent=request.headers.get("user-agent", ""),
-                latency=latency,
-            )
-
-            if len(errors) > 0:
-                errors.append(await self._dump_request(request))
-
-                for i, error in enumerate(errors):
-                    _log.error(
-                        str(i),
-                        extra={
-                            "error": str(error),
-                        },
-                    )
-            else:
-                _log.info(
-                    path,
-                )
-            return res
-
-
-class Recovery(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+        error = None
         try:
-            return await call_next(request)
+            res = await call_next(request)
         except:
-            request.state.errors.append(traceback.format_exc())
-            return Response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+            res = Response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+            error = traceback.format_exc()
+
+        latency = time.time() - start_time
+
+        _log = logger.bind(
+            method=request.method,
+            url=path,
+            status=res.status_code,
+            remote_address=request.client.host if request.client is not None else "",
+            user_agent=request.headers.get("user-agent", ""),
+            latency=latency,
+        )
+
+        if error:
+            # TODO: if debug mode, dump request body
+            _log.error(error)
+            _log.error(await self._dump_request(request))
+        else:
+            _log.info("request")
+
+        return res
+
+
+for name in logging.root.manager.loggerDict:  # pylint: disable=no-member
+    if name.startswith("uvicorn"):
+        logging.getLogger(name).handlers.clear()
+
+# pylint: disable=protected-access
+logging.getLogger("uvicorn.error").addHandler(logger._handler)
+logging.getLogger("uvicorn.error").propagate = False
