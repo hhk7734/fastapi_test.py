@@ -2,7 +2,7 @@ import logging
 from contextlib import contextmanager
 from contextvars import ContextVar
 from enum import StrEnum
-from typing import Any
+from typing import Any, Self
 
 from pydantic import BaseSettings
 
@@ -30,6 +30,38 @@ class CtxLoggerConfig(BaseSettings):
         env_prefix = "LOG_"
         env_file = ".env"
         env_file_encoding = "utf-8"
+
+
+class _CtxBindingLogger:
+    def __init__(self, logger: logging.Logger, **kwargs) -> None:
+        self._logger = logger
+        self._extra = kwargs
+
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        self._logger.debug(msg, *args, extra={**self._extra, **kwargs})
+
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        self._logger.info(msg, *args, extra={**self._extra, **kwargs})
+
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        self._logger.warning(msg, *args, extra={**self._extra, **kwargs})
+
+    def error(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        self._logger.error(msg, *args, extra={**self._extra, **kwargs})
+
+    def exception(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        self._logger.exception(msg, *args, extra={**self._extra, **kwargs})
+
+    @contextmanager
+    def newContext(self, **kwargs) -> None:
+        new_ctx = {**_ctx.get(), **self._extra, **kwargs}
+        token = _ctx.set(new_ctx)
+        yield
+        _ctx.reset(token)
+
+    def bind(self, **kwargs) -> Self:
+        kwargs = {**self._extra, **kwargs}
+        return _CtxBindingLogger(self._logger, **kwargs)
 
 
 class CtxLogger:
@@ -83,3 +115,6 @@ class CtxLogger:
         token = _ctx.set(new_ctx)
         yield
         _ctx.reset(token)
+
+    def bind(self, **kwargs) -> _CtxBindingLogger:
+        return _CtxBindingLogger(self._logger, **kwargs)
