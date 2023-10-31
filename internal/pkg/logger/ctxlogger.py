@@ -4,7 +4,7 @@ from contextvars import ContextVar
 from enum import StrEnum
 from typing import Any, Self
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 from internal.pkg.logger.formatter import JsonFormatter, TextFormatter
 
