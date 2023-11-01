@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "app.test.main:app"
+                "app.test.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-use-colors", "--no-access-log"
             ],
             "jinja": false,
             "justMyCode": false
