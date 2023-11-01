@@ -1,13 +1,15 @@
-import logging
 import time
 import traceback
 from http import HTTPStatus
 
+import loggingx as logging
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
 
-from internal.pkg.logger import logger
+handler = logging.StreamHandler()
+handler.setFormatter(logging.JSONFormatter())
+logging.basicConfig(level=logging.INFO, handlers=[handler])
 
 
 class Logger(BaseHTTPMiddleware):
@@ -38,29 +40,27 @@ class Logger(BaseHTTPMiddleware):
 
         latency = time.time() - start_time
 
-        _log = logger.bind(
+        with logging.addFields(
             method=request.method,
             url=path,
             status=res.status_code,
             remote_address=request.client.host if request.client is not None else "",
             user_agent=request.headers.get("user-agent", ""),
             latency=latency,
-        )
-
-        if error:
-            # TODO: if debug mode, dump request body
-            _log.error(error)
-            _log.error(await self._dump_request(request))
-        else:
-            _log.info("request")
+        ):
+            if error:
+                # TODO: if debug mode, dump request body
+                logging.error(error)
+                logging.error(await self._dump_request(request))
+            else:
+                logging.info("request")
 
         return res
 
 
-for name in logging.root.manager.loggerDict:  # pylint: disable=no-member
-    if name.startswith("uvicorn"):
-        logging.getLogger(name).handlers.clear()
+for logger in logging.getLogger().manager.loggerDict.values():
+    if isinstance(logger, logging.Logger):
+        logger.handlers.clear()
 
-# pylint: disable=protected-access
-logging.getLogger("uvicorn.error").addHandler(logger._handler)
+logging.getLogger("uvicorn.error").addHandler(handler)
 logging.getLogger("uvicorn.error").propagate = False
