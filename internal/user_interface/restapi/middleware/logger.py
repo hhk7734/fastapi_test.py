@@ -8,7 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.responses import Response
 
 handler = logging.StreamHandler()
-handler.setFormatter(logging.JSONFormatter())
+handler.setFormatter(logging.JSONFormatter(logging.Information.THREAD_NAME))
 logging.basicConfig(level=logging.INFO, handlers=[handler])
 
 

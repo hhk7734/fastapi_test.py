@@ -302,13 +302,13 @@ testing = ["Django", "attrs", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "loggingx-py"
-version = "0.5.0"
+version = "0.6.0"
 description = "Drop-in replacement for Python's built-in `logging` module"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "loggingx-py-0.5.0.tar.gz", hash = "sha256:84b4798dd090f271ebfb329927efaf00daa628d18c508278dcd668fefe78db18"},
-    {file = "loggingx_py-0.5.0-py3-none-any.whl", hash = "sha256:70501b2222201816a398ab36b71408e6ba72f4525f876e3e3681a9f496a43c63"},
+    {file = "loggingx-py-0.6.0.tar.gz", hash = "sha256:9d65f677374d0e238d0693c0ac2e13f0ad27e6da77f6b3e054065326d4b620c6"},
+    {file = "loggingx_py-0.6.0-py3-none-any.whl", hash = "sha256:6f538d4b478112f7399279459013e3badc425b6b2f555038c28c337850d2bbe6"},
 ]
 
 [[package]]
@@ -866,4 +866,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "551c075df277b72545cf220937cf6beda0c52a19dbace0475342dbc4bb1c0586"
+content-hash = "ad82ee990feb24ff3b4905f931ccbdc937a6cd8efff5585093c92dd264781377"
