@@ -1,5 +1,5 @@
 import asyncio
-from asyncio import Future
+from concurrent.futures import Future
 from threading import Event, Thread
 from typing import Awaitable, Callable
 
@@ -9,9 +9,9 @@ import loggingx as logging
 class EventLoop(Thread):
     def __init__(
         self,
-        startup: list[Callable[[None], Awaitable[None]]] = None,
-        shutdown: list[Callable[[None], Awaitable[None]]] = None,
-        closed: list[Callable[[None], None]] = None,
+        startup: list[Callable[[None], Awaitable[None]]] | None = None,
+        shutdown: list[Callable[[None], Awaitable[None]]] | None = None,
+        closed: list[Callable[[None], None]] | None = None,
     ) -> None:
         super().__init__(daemon=True)
 
@@ -19,9 +19,14 @@ class EventLoop(Thread):
         self._shutdown = shutdown if shutdown else []
         self._closed = closed if closed else []
 
+        self._startup_finished = Event()
         self._cancelled = Event()
         self._loop = asyncio.new_event_loop()
         self._futures: list[Future] = []
+
+    def start(self) -> None:
+        super().start()
+        self._startup_finished.wait()
 
     def add_task(self, coro: Callable[[Event], Awaitable[None]]) -> None:
         """
@@ -48,6 +53,7 @@ class EventLoop(Thread):
             # startup
             logging.info("starting up event loop")
             self._loop.run_until_complete(asyncio.gather(*[coro() for coro in self._startup]))
+            self._startup_finished.set()
 
             # run
             async def main():
