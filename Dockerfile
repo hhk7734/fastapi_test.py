@@ -1,18 +1,25 @@
-FROM python:3.11-alpine as requirements-stage
+FROM python:3.11-alpine as builder
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
 WORKDIR /app
 
 RUN pip install poetry
-COPY pyproject.toml poetry.lock* /app/
-RUN poetry export -f requirements.txt  --output /app/requirements.txt --without-hashes
+COPY ./pyproject.toml ./poetry.lock* ./
+RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
+
+
 
 FROM python:3.11-alpine as runtime
 
-WORKDIR /app
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
 
-COPY ./app /app/app
-COPY --from=requirements-stage /app/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+COPY . .
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 ENV PORT 8000
 
