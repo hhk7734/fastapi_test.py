@@ -25,4 +25,4 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 ENV PORT 8000
 
-ENTRYPOINT ["uvicorn", "app.test.main:app", "--host", "0.0.0.0", "--port", "${PORT}", "--no-access-log", "--no-use-colors"]
+ENTRYPOINT uvicorn app.test.main:app --host 0.0.0.0 --port ${PORT} --no-access-log --no-use-colors
