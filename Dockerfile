@@ -18,9 +18,11 @@ FROM python:3.11-alpine as runtime
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
+WORKDIR /app
+
 COPY . .
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 ENV PORT 8000
 
-CMD ["uvicorn", "app.test.main:app", "--host", "0.0.0.0", "--port", "${PORT}", "--no-access-log", "--no-use-colors"]
+ENTRYPOINT ["uvicorn", "app.test.main:app", "--host", "0.0.0.0", "--port", "${PORT}", "--no-access-log", "--no-use-colors"]
