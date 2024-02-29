@@ -1,16 +1,14 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "name": "Python: FastAPI",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
+            "cwd": "${workspaceFolder}",
             "module": "uvicorn",
             "args": [
-                "app.test.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-use-colors", "--no-access-log"
+                "app.test.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-use-colors", "--no-access-log", "--reload"
             ],
             "jinja": false,
             "justMyCode": false
