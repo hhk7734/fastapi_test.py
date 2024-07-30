@@ -1,1 +1,14 @@
+.git
+.gitignore
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+.vscode
+.github
+deploy
+.dockerignore
+.tool-versions
+Makefile
+*.md
 .env
