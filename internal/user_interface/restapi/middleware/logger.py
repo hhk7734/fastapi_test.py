@@ -34,7 +34,7 @@ class Logger(BaseHTTPMiddleware):
         error = None
         try:
             res = await call_next(request)
-        except:
+        except Exception:
             res = Response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
             error = traceback.format_exc()
 
