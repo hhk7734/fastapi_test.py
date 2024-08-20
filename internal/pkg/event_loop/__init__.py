@@ -62,7 +62,7 @@ class EventLoop(Thread):
 
             logging.info("running event loop")
             self._loop.run_until_complete(main())
-        except:
+        except Exception:
             logging.exception("event loop failed")
         finally:
             self._cancelled.set()
