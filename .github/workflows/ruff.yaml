@@ -29,4 +29,6 @@ jobs:
       - name: Run Ruff
         run: |
           ruff check --output-format=github **/*.py
-          ruff format --check **/*.py
+
+          ruff format --check **/*.py \
+            || (echo "::error:: Run `ruff format` to fix the issues" && exit 1)
