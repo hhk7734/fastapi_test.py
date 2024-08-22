@@ -14,6 +14,7 @@ class RestAPI:
         app = FastAPI(
             lifespan=self._lifespan,
             middleware=[
+                Middleware(middleware.request_id.RequestID),
                 Middleware(middleware.logger.Logger),
             ],
         )
