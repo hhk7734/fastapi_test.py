@@ -4,12 +4,8 @@ from http import HTTPStatus
 
 import loggingx as logging
 from fastapi import Request
+from fastapi.responses import Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from starlette.responses import Response
-
-handler = logging.StreamHandler()
-handler.setFormatter(logging.JSONFormatter(logging.Information.THREAD_NAME))
-logging.basicConfig(level=logging.INFO, handlers=[handler])
 
 
 class Logger(BaseHTTPMiddleware):
@@ -34,6 +30,9 @@ class Logger(BaseHTTPMiddleware):
         error = None
         try:
             res = await call_next(request)
+
+            # FastAPI custom exceptions are already handled before this point.
+            # ex) HTTPException, RequestValidationError, WebSocketRequestValidationError
         except Exception:
             res = Response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
             error = traceback.format_exc()
@@ -56,11 +55,3 @@ class Logger(BaseHTTPMiddleware):
                 logging.info("request")
 
         return res
-
-
-for logger in logging.getLogger().manager.loggerDict.values():
-    if isinstance(logger, logging.Logger):
-        logger.handlers.clear()
-
-logging.getLogger("uvicorn.error").addHandler(handler)
-logging.getLogger("uvicorn.error").propagate = False

@@ -5,9 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
 
-from internal.pkg.event_loop import EventLoop
-from internal.user_interface.restapi import middleware
-from internal.user_interface.restapi.controller import healthz
+from ..event_loop import EventLoop
+from . import controller, middleware
 
 
 class RestAPI:
@@ -15,11 +14,11 @@ class RestAPI:
         app = FastAPI(
             lifespan=self._lifespan,
             middleware=[
-                Middleware(middleware.Logger),
+                Middleware(middleware.logger.Logger),
             ],
         )
 
-        app.include_router(healthz.router)
+        app.include_router(controller.healthz.router)
 
         return app
 

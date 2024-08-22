@@ -9,9 +9,9 @@ import loggingx as logging
 class EventLoop(Thread):
     def __init__(
         self,
-        startup: list[Callable[[None], Awaitable[None]]] | None = None,
-        shutdown: list[Callable[[None], Awaitable[None]]] | None = None,
-        closed: list[Callable[[None], None]] | None = None,
+        startup: list[Callable[[], Awaitable[None]]] | None = None,
+        shutdown: list[Callable[[], Awaitable[None]]] | None = None,
+        closed: list[Callable[[], None]] | None = None,
     ) -> None:
         super().__init__(daemon=True)
 
