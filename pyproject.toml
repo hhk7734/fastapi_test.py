@@ -12,6 +12,9 @@ uvicorn = "^0.30.6"
 fastapi = "^0.112.1"
 pydantic-settings = "^2.4.0"
 loggingx-py = "^0.11.0"
+sqlalchemy = "^2.0.36"
+atlas-provider-sqlalchemy = "^0.2.2"
+psycopg = {version = "^3.2.3", extras = ["binary"]}
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.1"
@@ -25,6 +28,7 @@ build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core>=1.0.0"]
 
 [tool.mypy]
+plugins = "pydantic.mypy"
 
 [tool.ruff]
 exclude = [

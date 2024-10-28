@@ -1,3 +1,3 @@
-from . import logger, request_id
+from . import db, logger, request_id
 
-__all__ = ["logger", "request_id"]
+__all__ = ["db", "logger", "request_id"]
