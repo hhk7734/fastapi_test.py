@@ -1,0 +1,5 @@
+[tools]
+python = "3.12"
+
+[tasks.uvicorn]
+run = "poetry run uvicorn src.cmd.server:app --host 0.0.0.0 --port 8000 --no-access-log --no-use-colors --reload"

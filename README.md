@@ -1,11 +1,15 @@
-## FastAPI test
+# FastAPI test
 
 ## Development
+
+```shell
+mise install
+```
 
 ```shell
 poetry install --with dev,test
 ```
 
 ```shell
-make uvicorn
+mise run uvicorn
 ```
