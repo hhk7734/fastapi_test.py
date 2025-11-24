@@ -9,7 +9,7 @@ class DBConfig(BaseSettings):
     host: str = "localhost"
     port: int = 5432
     user: str = "postgres"
-    password: str = Field(exclude=True)
+    password: str = Field("postgres", exclude=True)
     database: str = "fastapi_test"
     connection_options: str | None = None
 
